@@ -1,12 +1,12 @@
 <template>
   <div class="header">
-
+    I am header Component
   </div>
 </template>
 
 <script>
 export default {
-  name: 'header'
+  name: 'v-header'
 }
 </script>
 
