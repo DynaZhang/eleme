@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header />
+    <v-header :seller-detail="sellerDetail"/>
     <div class="tabs border-1px">
       <div :class="{'tab-item': true, 'active': currentTab === 0}" @click="toPage('/goods',0)">商品</div>
       <div :class="{'tab-item': true, 'active': currentTab === 1}" @click="toPage('/ratings',1)">评论</div>
@@ -14,6 +14,8 @@
 
 <script>
 import VHeader from '@/components/header/header'
+
+import {getSeller} from '@/api/data'
 export default {
   name: 'App',
   components: {
@@ -21,7 +23,8 @@ export default {
   },
   data () {
     return {
-      currentTab: 0
+      currentTab: 0,
+      sellerDetail: {}
     }
   },
   methods: {
@@ -31,6 +34,18 @@ export default {
         () => {},
         () => {})
     }
+  },
+  created () {
+    getSeller({}).then(res => {
+      console.log(res)
+      if (res.result) {
+        this.sellerDetail = res.data
+      } else {
+        this.sellerDetail = {}
+      }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 </script>
@@ -50,6 +65,7 @@ export default {
         font-size: 14px
         text-align: center
         color: rgb(77,85,93)
+        cursor: pointer
         &.active
           color: rgb(240,20,20)
 </style>
