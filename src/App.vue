@@ -37,7 +37,6 @@ export default {
   },
   created () {
     getSeller({}).then(res => {
-      console.log(res)
       if (res.result) {
         this.sellerDetail = res.data
       } else {
