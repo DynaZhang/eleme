@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" v-if="sellerDetail">
     <div class="content-wrapper">
       <div class="avatar">
         <img width="64" height="64" :src="sellerDetail.avatar" alt="no pic">
@@ -13,7 +13,7 @@
           {{sellerDetail.description}}/{{sellerDetail.deliveryTime}}分钟送达
         </div>
         <div v-if="sellerDetail.supports" class="support">
-          <span :class="`icon ${supportType[sellerDetail.supports[0].type]}`"></span>
+          <Icon :type="sellerDetail.supports[0].type" :size="1" />
           <span class="text">{{sellerDetail.supports[0].description}}</span>
         </div>
       </div>
@@ -45,7 +45,7 @@
             </div>
             <ul v-if="sellerDetail.supports" class="supports">
               <li class="support-item" v-for="(item,index) in sellerDetail.supports" :key="index">
-                <span class="icon" :class="supportType[item.type]"></span>
+                <Icon :type="item.type" :size="2" />
                 <span class="text">{{item.description}}</span>
               </li>
             </ul>
@@ -69,30 +69,27 @@
 
 <script>
 import Star from '@/components/star/star.vue'
+import Icon from '../icon/icon'
+
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'v-header',
   components: {
+    Icon,
     Star
-  },
-  props: {
-    sellerDetail: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
   },
   data () {
     return {
-      supportType: [
-        'decrease',
-        'discount',
-        'guarantee',
-        'invoice',
-        'special'
-      ],
       detailShow: false
+    }
+  },
+  computed: {
+    ...mapGetters({
+      'getSellerDetail': 'seller/getSellerDetail'
+    }),
+    sellerDetail () {
+      return this.getSellerDetail
     }
   },
   methods: {
@@ -152,26 +149,8 @@ export default {
           margin-bottom: 10px
           line-height: 12px
         .support
-          .icon
-            display: inline-block
-            vertical-align: middle
-            width: 12px
-            height: 12px
-            background-size: 12px 12px
-            background-repeat: no-repeat
-            &.decrease
-              bg-image('decrease_1')
-            &.discount
-              bg-image('discount_1')
-            &.guarantee
-              bg-image('guarantee_1')
-            &.invoice
-              bg-image('invoice_1')
-            &.special
-              bg-image('special_1')
           .text
-            margin-left: 4px
-            vertical-align: middle
+            vertical-align: top
             line-height: 12px
       .support-count
         position: absolute
@@ -276,24 +255,6 @@ export default {
               font-size: 0
               &:last-child
                 margin-bottom: 0
-              .icon
-                display: inline-block
-                width: 16px
-                height: 16px
-                vertical-align: top
-                margin-right: 6px
-                background-size: 16px 16px
-                background-repeat: no-repeat
-                &.decrease
-                  bg-image('decrease_2')
-                &.discount
-                  bg-image('discount_2')
-                &.guarantee
-                  bg-image('guarantee_2')
-                &.invoice
-                  bg-image('invoice_2')
-                &.special
-                  bg-image('special_2')
               .text
                 line-height: 12px
                 font-size: 12px

@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://www.fastmock.site/mock/0eaf78c398cb5dc15c4d59c97a5a798e/eleme'
+axios.defaults.baseURL = '/eleme'
 axios.defaults.withCredentials = true
 axios.defaults.timeout = 30000
 

@@ -1,19 +1,31 @@
 <template>
-  <span class="icon" :class="supportType[item.type]"></span>
+  <span v-show="type >= 0" class="icon" :class="iconClass"></span>
 </template>
 
 <script>
+const ICON_TYPE = [
+  'decrease',
+  'discount',
+  'guarantee',
+  'invoice',
+  'special'
+]
+
 export default {
   name: 'icon',
-  data () {
-    return {
-      supportType: [
-        'decrease',
-        'discount',
-        'guarantee',
-        'invoice',
-        'special'
-      ]
+  props: {
+    type: {
+      type: Number,
+      default: -1
+    },
+    size: {
+      type: Number,
+      default: 1
+    }
+  },
+  computed: {
+    iconClass () {
+      return `${ICON_TYPE[this.type]}_${this.size}`
     }
   },
   methods: {}
@@ -21,9 +33,11 @@ export default {
 </script>
 
 <style scoped lang="stylus">
+  @import "../../common/stylus/mixins.styl"
   .icon
     display: inline-block
-    vertical-align: middle
+    vertical-align: top
+    margin-right: 4px
     width: 12px
     height: 12px
     background-size: 12px 12px

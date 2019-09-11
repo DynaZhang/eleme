@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header :seller-detail="sellerDetail"/>
+    <v-header/>
     <div class="tabs border-1px">
       <div :class="{'tab-item': true, 'active': currentTab === 0}" @click="toPage('/goods',0)">商品</div>
       <div :class="{'tab-item': true, 'active': currentTab === 1}" @click="toPage('/ratings',1)">评论</div>
@@ -15,7 +15,8 @@
 <script>
 import VHeader from '@/components/header/header'
 
-import {getSeller} from '@/api/data'
+import {mapActions} from 'vuex'
+
 export default {
   name: 'App',
   components: {
@@ -23,25 +24,25 @@ export default {
   },
   data () {
     return {
-      currentTab: 0,
-      sellerDetail: {}
+      currentTab: 0
     }
   },
+  computed: {},
   methods: {
+    ...mapActions({
+      'reqSellerDetail': 'seller/reqSellerDetailAction'
+    }),
     toPage (path, index) {
       this.currentTab = index
       this.$router.replace(path,
         () => {},
-        () => {})
+        () => {}
+      )
     }
   },
   created () {
-    getSeller({}).then(res => {
-      if (res.result) {
-        this.sellerDetail = res.data
-      } else {
-        this.sellerDetail = {}
-      }
+    this.reqSellerDetail().then(() => {
+
     }).catch(err => {
       console.log(err)
     })
