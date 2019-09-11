@@ -1,5 +1,5 @@
 <template>
-  <div class="header" v-if="sellerDetail">
+  <div class="header">
     <div class="content-wrapper">
       <div class="avatar">
         <img width="64" height="64" :src="sellerDetail.avatar" alt="no pic">
@@ -89,6 +89,7 @@ export default {
       'getSellerDetail': 'seller/getSellerDetail'
     }),
     sellerDetail () {
+      console.log(this.getSellerDetail);
       return this.getSellerDetail
     }
   },

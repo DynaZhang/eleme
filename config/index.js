@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/eleme':{
-        target:'http://127.0.0.1:5001/mocks',//跨域地址
+      '/eleme/api':{
+        target:'https://9bb8e785-4aa9-4083-916a-824b26aee854.mock.pstmn.io',//跨域地址
         changeOrigin:true//是否跨域
       }
     },

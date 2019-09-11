@@ -42,7 +42,6 @@ export default {
   },
   created () {
     this.reqSellerDetail().then(() => {
-
     }).catch(err => {
       console.log(err)
     })
