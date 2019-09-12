@@ -30,19 +30,23 @@
                   <span class="now">￥{{food.price}}</span>
                   <span class="old">￥12</span>
                 </p>
+                <div class="cart-control-wrapper">
+                  <cart-control :food="food"/>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shop-cart/>
+    <shop-cart ref="shopCart"/>
   </div>
 </template>
 
 <script>
 import Icon from '@/components/icon/icon'
 import ShopCart from '@/components/shop-cart/shop-cart'
+import CartControl from '@/components/cart-control/cart-control'
 
 import BScroll from 'better-scroll'
 
@@ -52,7 +56,8 @@ export default {
   name: 'goods',
   components: {
     Icon,
-    ShopCart
+    ShopCart,
+    CartControl
   },
   data () {
     return {
@@ -87,11 +92,11 @@ export default {
         click: true
       })
       this.foodScroll = new BScroll(this.$refs.foodsWrapper, {
+        click: true,
         probeType: 3
       })
       this.foodScroll.on('scroll', (pos) => {
         // pos.y为负值，取其绝对值
-        console.log(this.scrollY)
         this.scrollY = Math.abs(pos.y)
       })
     },
@@ -125,6 +130,9 @@ export default {
     }).catch(err => {
       console.log(err)
     })
+  },
+  watch: {
+
   }
 }
 </script>
@@ -186,6 +194,7 @@ export default {
               img
                 border-radius: 2px
             .content
+              position: relative
               flex: 1
               line-height: 10px
               font-size: 10px
@@ -209,4 +218,8 @@ export default {
                   font-size: 14px
                   font-weight: 700
                   color: rgb(240,20,20)
+              .cart-control-wrapper
+                position: absolute
+                right: 0
+                bottom: -10px
 </style>

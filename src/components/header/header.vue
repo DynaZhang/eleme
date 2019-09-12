@@ -89,7 +89,6 @@ export default {
       'getSellerDetail': 'seller/getSellerDetail'
     }),
     sellerDetail () {
-      console.log(this.getSellerDetail);
       return this.getSellerDetail
     }
   },

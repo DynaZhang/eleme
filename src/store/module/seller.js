@@ -3,14 +3,19 @@ import {getSeller} from '../../api/data'
 export default {
   namespaced: true,
   state: {
-    sellerDetail: {}
+    sellerDetail: {},
+    selectFoods: []
   },
   getters: {
-    getSellerDetail: state => state.sellerDetail
+    getSellerDetail: state => state.sellerDetail,
+    getSelectFoods: state => state.selectFoods
   },
   mutations: {
     setSellerDetail: (state, sellerDetail) => {
       state.sellerDetail = sellerDetail
+    },
+    setSelectFoods: (state, selectFoods) => {
+      state.selectFoods = selectFoods
     }
   },
   actions: {

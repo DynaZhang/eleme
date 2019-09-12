@@ -7,7 +7,9 @@
       <div :class="{'tab-item': true, 'active': currentTab === 2}" @click="toPage('/seller',2)">商家</div>
     </div>
     <div class="content">
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>
