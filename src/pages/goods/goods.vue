@@ -31,7 +31,7 @@
                   <span class="old">￥12</span>
                 </p>
                 <div class="cart-control-wrapper">
-                  <cart-control :food="food"/>
+                  <cart-control :food="food" @count-change="handleCountChange"/>
                 </div>
               </div>
             </li>
@@ -51,6 +51,7 @@ import CartControl from '@/components/cart-control/cart-control'
 import BScroll from 'better-scroll'
 
 import {getGoodsBySellerId} from '@/api/data'
+import {mapGetters, mapMutations} from 'vuex'
 
 export default {
   name: 'goods',
@@ -69,6 +70,12 @@ export default {
     }
   },
   computed: {
+    ...mapGetters({
+      'getSelectFoods': 'seller/getSelectFoods'
+    }),
+    selectFoods () {
+      return this.getSelectFoods
+    },
     currentIndex: {
       get () {
         for (let i = 0; i < this.heightList.length; i++) {
@@ -87,6 +94,9 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      'setSelectFoods': 'seller/setSelectFoods'
+    }),
     _initScroll () {
       this.menuScroll = new BScroll(this.$refs.menuWrapper, {
         click: true
@@ -114,6 +124,21 @@ export default {
         const height = foodList[i].offsetTop
         this.heightList.push(height)
       }
+    },
+    handleCountChange (val, food) {
+      if (!food.count) {
+        food.count = 1
+      } else {
+        food.count += val
+      }
+      food = JSON.parse(JSON.stringify(food))
+      const newSelectFood = this.selectFoods.filter((item) => {
+        return (item.name !== food.name && item.count > 0)
+      })
+      if (food.count > 0) {
+        newSelectFood.unshift(food)
+      }
+      this.setSelectFoods([...newSelectFood])
     }
   },
   created () {

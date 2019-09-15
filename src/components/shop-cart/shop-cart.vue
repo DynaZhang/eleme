@@ -2,7 +2,7 @@
   <div class="shop-cart">
     <div class="content">
       <div class="content-left">
-        <div class="logo-wrapper" @click.native="toggle">
+        <div class="logo-wrapper" @click="toggle">
           <div class="logo" :class="{'high-light': totalCount > 0}">
             <i class="icon-shopping_cart" :class="{'high-light': totalCount > 0}"></i>
           </div>
@@ -13,16 +13,16 @@
       </div>
       <div class="content-right">
         <div class="pay" :class="{'high-light': totalPrice > 0 && totalPrice >= sellerDetail.minPrice}">
-          {{payDesc}}
+          {{payDesc}} {{this.fold}}
         </div>
       </div>
     </div>
-    <div class="shop-cart-list" v-show="listShow">
+    <div class="shop-cart-list" v-show="this.totalCount > 0 && fold">
       <div class="list-header">
         <h1 class="title">购物车</h1>
         <span class="empty">清空</span>
       </div>
-      <div class="list-content">
+      <div class="list-content" ref="foodsScroll">
         <ul>
           <li class="food" v-for="(food,index) in selectFoods" :key="index">
             <span class="name">{{food.name}}</span>
@@ -30,7 +30,7 @@
               <span class="text">￥{{food.price * food.count}}</span>
             </div>
             <div class="cart-control-wrapper">
-              <cart-control :food="food" />
+              <cart-control :food="food" @count-change="handleCountChange"/>
             </div>
           </li>
         </ul>
@@ -40,8 +40,9 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
+import {mapGetters, mapMutations} from 'vuex'
 import CartControl from '../cart-control/cart-control'
+import BScroll from 'better-scroll'
 
 export default {
   name: 'shop-cart',
@@ -58,7 +59,8 @@ export default {
   },
   data () {
     return {
-      fold: true
+      fold: false,
+      foodScroll: null
     }
   },
   computed: {
@@ -94,24 +96,43 @@ export default {
       } else {
         return `去结算`
       }
-    },
-    listShow () {
-      if (this.totalCount === 0) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.fold = true
-        return false
-      } else {
-        return !this.fold
-      }
     }
   },
   methods: {
+    ...mapMutations({
+      'setSelectFoods': 'seller/setSelectFoods'
+    }),
     toggle  () {
-      console.log(this.selectFoods)
-      if (!this.totalCount) {
+      if (this.totalCount === 0) {
         return
       }
       this.fold = !this.fold
+    },
+    handleCountChange (val, food) {
+      if (!food.count) {
+        food.count = 1
+      } else {
+        food.count += val
+      }
+      const newSelectFood = this.selectFoods.filter((item) => {
+        return (item.name !== food.name && item.count > 0)
+      })
+      if (food.count > 0) {
+        newSelectFood.unshift(food)
+      }
+      this.setSelectFoods(newSelectFood)
+    }
+  },
+  watch: {
+    totalCount (val) {
+      if (val === 0) {
+        this.fold = false
+      }
+      this.$nextTick(() => {
+        this.foodScroll = new BScroll(this.$refs.foodsScroll, {
+          click: true
+        })
+      })
     }
   }
 }
@@ -192,7 +213,7 @@ export default {
           font-size: 12px
           color: rgba(255,255,255,.4)
       .content-right
-        flex: 0 0 105
+        flex: 0 1 105
         width: 105px
         .pay
           height: 100%

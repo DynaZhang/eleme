@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import {mapGetters, mapMutations} from 'vuex'
 export default {
   name: 'cart-control',
   props: {
@@ -27,46 +26,22 @@ export default {
     }
   },
   computed: {
-    ...mapGetters({
-      'getSelectFoods': 'seller/getSelectFoods'
-    }),
     selectFoods () {
       return this.getSelectFoods
     }
   },
   methods: {
-    ...mapMutations({
-      'setSelectFoods': 'seller/setSelectFoods'
-    }),
     addCount (event) {
       if (!event._constructed) {
         return
       }
-      if (!this.food.count) {
-        this.$set(this.food, 'count', 1)
-      } else {
-        this.food.count += 1
-      }
-      const newSelectFood = this.selectFoods.filter((item) => {
-        return (item.name !== this.food.name && item.count > 0)
-      })
-      if (this.food.count > 0) {
-        newSelectFood.unshift(this.food)
-      }
-      this.setSelectFoods(newSelectFood)
+      this.$emit('count-change', 1, this.food)
     },
     decreaseCount (event) {
       if (!event._constructed) {
         return
       }
-      this.food.count -= 1
-      const newSelectFood = this.selectFoods.filter((item) => {
-        return (item.name !== this.food.name && item.count > 0)
-      })
-      if (this.food.count > 0) {
-        newSelectFood.unshift(this.food)
-      }
-      this.setSelectFoods(newSelectFood)
+      this.$emit('count-change', -1, this.food)
     }
   }
 }
